@@ -498,7 +498,7 @@ describe Chef::Provider::Package::Rubygems do
           @new_resource.stub(:version).and_return(">=2.3.0")
 
           @provider.gem_env.should_not_receive(:install)
-          @provider.action_install
+          @provider.run_action(:install)
         end
 
         it "allows user to specify gem version with fuzzy operator" do
@@ -506,7 +506,7 @@ describe Chef::Provider::Package::Rubygems do
           @new_resource.stub(:version).and_return("~>2.3.0")
 
           @provider.gem_env.should_not_receive(:install)
-          @provider.action_install
+          @provider.run_action(:install)
         end
       end
     end
