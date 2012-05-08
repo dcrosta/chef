@@ -29,17 +29,18 @@ describe Chef::Mixin::EnforceOwnershipAndPermissions do
   end
 
   it "should call set_all on the file access control object" do
-    @resource.owner("adam")
+    ::File.should_receive(:exists?).and_return false
+
     Chef::FileAccessControl.any_instance.should_receive(:set_all)
-    @provider.action_create
+    @provider.run_action(:create)
   end
 
   it "should call updated_by_last_action on the new resource" do
-    @resource.owner("adam")
-    @provider.new_resource.should_receive(:updated_by_last_action)
-     Chef::FileAccessControl.any_instance.stub(:set_all)
-    @provider.action_create
+    ::File.should_receive(:exists?).and_return false
+    Chef::FileAccessControl.any_instance.stub(:set_all)
+    @provider.run_action(:create)
+    @provider.new_resource.updated_by_last_action?.should be_true
+
   end
 
 end
-
