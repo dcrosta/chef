@@ -66,9 +66,7 @@ class Chef
     end
 
     def action_nothing
-      converge_by("Would do nothing for #{@new_resource.to_s}") do
-        Chef::Log.debug("Doing nothing for #{@new_resource.to_s}")
-      end
+      Chef::Log.debug("Doing nothing for #{@new_resource.to_s}")
       true
     end
 
@@ -87,8 +85,12 @@ class Chef
       if whyrun_supported?
         send("action_#{action}")
       else
-        converge_by("bypassing action #{action}, whyrun not supported in resource provider #{self.class.name} ") do
-          send("action_#{action}")
+        if action == :nothing
+          action_nothing
+        else
+          converge_by("bypassing action #{action}, whyrun not supported in resource provider #{self.class.name} ") do
+            send("action_#{action}")
+          end
         end
       end
       converge
